@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EmployeeMonitorApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="registered_employees">Registered Employees</string>
+    <string name="selected_attendance_time_date">Selected Attendances</string>
+    <string name="search">Search</string>
+</resources>
