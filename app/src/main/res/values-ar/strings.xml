@@ -4,4 +4,6 @@
     <string name="registered_employees">Registered Employees</string>
     <string name="selected_attendance_time_date">Selected Attendances</string>
     <string name="search">Search</string>
+    <string name="give_phone_permission">Give Phone Permission</string>
+    <string name="select_monitor_dates">Select Monitor Dates</string>
 </resources>

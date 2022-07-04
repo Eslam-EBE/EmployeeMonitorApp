@@ -12,5 +12,5 @@ interface MonitorRepository {
 
     fun getEmployeeDetails(empdetails: EmployeeDetailsRequest): Flow<ResultWrapper<List<EmployeeDetails>>>
 
-    suspend fun updateEmployeePermission(id: String): String
+    suspend fun updateEmployeePermission(id: String): Int
 }

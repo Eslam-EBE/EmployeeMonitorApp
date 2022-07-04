@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_employees_list">
         <action
             android:id="@+id/action_employeesListFragment_to_employeeDetailsFragment"
-            app:destination="@id/employeeDetailsFragment" />
+            app:destination="@id/employeeDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/employeeDetailsFragment"
@@ -21,7 +23,21 @@
         tools:layout="@layout/fragment_employee_details">
         <action
             android:id="@+id/action_employeeDetailsFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+        <argument
+            android:name="phone"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="first_date"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="second_date"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"

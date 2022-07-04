@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName
 open class BaseResponse(
 
     @field:SerializedName("response")
-    val response: Response? = null
-)
+    val response: Response? = null,
+
+    )
 
 data class Response(
 
@@ -16,6 +17,4 @@ data class Response(
     @field:SerializedName("code")
     val code: Int? = null,
 
-    @field:SerializedName("change_perm")
-    val changePerm: Boolean? = null
 )

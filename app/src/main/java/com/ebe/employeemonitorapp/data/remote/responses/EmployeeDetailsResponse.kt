@@ -31,15 +31,15 @@ data class ResultItem(
 )
 
 
-fun List<ResultItem>?.toDomain(): List<EmployeeDetails> {
+fun List<ResultItem?>?.toDomain(): List<EmployeeDetails> {
     return this?.map {
         EmployeeDetails(
-            phone = it.empId,
-            ismoked = it.ismoked,
-            name = it.name,
-            time = it.time,
-            long = it.lang,
-            lat = it.lat
+            phone = it?.empId,
+            ismoked = it?.ismoked,
+            name = it?.name,
+            time = it?.time,
+            long = it?.lang,
+            lat = it?.lat
         )
     }!!
 }

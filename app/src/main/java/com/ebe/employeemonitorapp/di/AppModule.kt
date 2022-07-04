@@ -4,16 +4,15 @@ import com.ebe.employeemonitorapp.data.remote.MonitorService
 import com.ebe.employeemonitorapp.data.repositories.MonitorRepositoryImpl
 import com.ebe.employeemonitorapp.domain.repositories.MonitorRepository
 import com.ebe.employeemonitorapp.utils.BaseUrl
+import com.ebe.employeemonitorapp.utils.getUnsafeOkHttpClient
 import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -25,11 +24,12 @@ object AppModule {
     fun providesMonitorService(): MonitorService {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-        val client = OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(logging).build()
+        val client = getUnsafeOkHttpClient()
+
+
         return Retrofit.Builder().baseUrl(BaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            .client(client!!)
             .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build().create(MonitorService::class.java)
     }
