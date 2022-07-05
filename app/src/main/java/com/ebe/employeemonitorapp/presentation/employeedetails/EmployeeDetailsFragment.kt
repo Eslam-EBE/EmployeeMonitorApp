@@ -1,5 +1,8 @@
 package com.ebe.employeemonitorapp.presentation.employeedetails
 
+import android.content.Intent
+import android.location.Geocoder
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class EmployeeDetailsFragment : Fragment() {
+class EmployeeDetailsFragment : Fragment(), EmployeeDetailsAdapter.GetMapLocation {
 
     private lateinit var binding: FragmentEmployeeDetailsBinding
 
@@ -40,6 +43,10 @@ class EmployeeDetailsFragment : Fragment() {
         }
 
         adapter = EmployeeDetailsAdapter(listOf())
+        val geocoder = Geocoder(requireContext())
+        adapter.geocoder = geocoder
+        adapter.context = requireContext()
+        adapter.getMapLocation = this
         binding.detailsRecycler.adapter = adapter
         addObservers()
 
@@ -71,5 +78,14 @@ class EmployeeDetailsFragment : Fragment() {
         }
     }
 
+    override fun getMap(lat: Double, long: Double, address: String) {
+        val gmmIntentUri = Uri.parse("geo:$lat,$long?q=" + Uri.encode(address))
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        mapIntent.resolveActivity(requireActivity().packageManager)?.let {
+            startActivity(mapIntent)
+        }
 
+
+    }
 }

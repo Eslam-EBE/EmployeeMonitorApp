@@ -37,7 +37,11 @@ class DetailsViewModel @Inject constructor(private val useCase: GetEmployeeDetai
     fun getEmployeeDetails(phone: String, firstDate: String, secondDate: String) {
         viewModelScope.launch {
 
-            useCase.invoke(EmployeeDetailsRequest(phone, firstDate, secondDate)).collect {
+            var secDate = ""
+            if (firstDate != secondDate) {
+                secDate = secondDate
+            }
+            useCase.invoke(EmployeeDetailsRequest(phone, firstDate, secDate)).collect {
 
                 when (it) {
                     is ResultWrapper.Success -> {
