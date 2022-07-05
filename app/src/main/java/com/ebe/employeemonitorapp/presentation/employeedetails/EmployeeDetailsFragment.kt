@@ -57,6 +57,11 @@ class EmployeeDetailsFragment : Fragment(), EmployeeDetailsAdapter.GetMapLocatio
     fun addObservers() {
         viewModel.employeeDetails.observe(viewLifecycleOwner) {
             if (it != null) {
+                if (it.isEmpty()) {
+                    binding.noVisits.visibility = View.VISIBLE
+                } else {
+                    binding.noVisits.visibility = View.INVISIBLE
+                }
                 adapter.submitList(it)
             }
         }

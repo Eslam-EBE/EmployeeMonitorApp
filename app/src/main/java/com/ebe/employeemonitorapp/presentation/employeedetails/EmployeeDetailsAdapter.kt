@@ -6,9 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ebe.employeemonitorapp.R
 import com.ebe.employeemonitorapp.databinding.DetailItemBinding
 import com.ebe.employeemonitorapp.domain.models.EmployeeDetails
+import com.ivoberger.statikgmapsapi.core.StatikGMapsUrl
+import com.ivoberger.statikgmapsapi.core.StatikMapsLocation
 import kotlinx.coroutines.CoroutineScope
 import java.text.SimpleDateFormat
 
@@ -56,6 +59,17 @@ class EmployeeDetailsAdapter(var detailsList: List<EmployeeDetails>) :
                 )
             }
 
+            Glide.with(binding.mapImg)
+                .load(
+                    getMapImgURL(
+                        details.lat?.toDouble()!!,
+                        details.long?.toDouble()!!,
+                        address
+                    )
+                )
+                .placeholder(R.drawable.egyptmap)
+                .into(binding.mapImg)
+
 
         }
     }
@@ -86,17 +100,27 @@ class EmployeeDetailsAdapter(var detailsList: List<EmployeeDetails>) :
     private fun getAddress(lat: Double, long: Double): String {
 
         try {
+            val addresses = geocoder?.getFromLocation(lat, long, 10)?.filter {
+                it.thoroughfare != null
+            }
+
+            addresses?.sortedByDescending {
+                it.maxAddressLineIndex
+            }
 
 
-            geocoder?.getFromLocation(lat, long, 1)?.first()
+
+            addresses?.first()
                 .run {
                     val sb = StringBuilder()
                     for (i in 0 until this?.maxAddressLineIndex!!) {
                         sb.append(this.getAddressLine(i))
                     }
-                    sb.append(this.locality)
-                    sb.append(this.thoroughfare)
-                    //  sb.append(this.countryName)
+                    if (this.locality != null)
+                        sb.append(this.locality)
+                    if (this.thoroughfare != null)
+                        sb.append(this.thoroughfare)
+                    // sb.append(this.countryName)
                     return sb.toString()
 
 
@@ -125,6 +149,24 @@ class EmployeeDetailsAdapter(var detailsList: List<EmployeeDetails>) :
 
     interface GetMapLocation {
         fun getMap(lat: Double, long: Double, address: String)
+    }
+
+
+    private fun getMapImgURL(lat: Double, long: Double, address: String): String {
+        val staticMap = StatikGMapsUrl("AIzaSyA2MSn1f0oSHcG1LonhFkOg0eYImEl8xgE") {
+            size = 500 to 250
+            center = StatikMapsLocation(lat, long)
+            markers = mutableListOf(
+                StatikMapsLocation(lat, long),
+                StatikMapsLocation(address = address),
+                StatikMapsLocation(lat, long)
+            )
+            zoom = 10
+            scale = 2
+        }
+// get the url, this is where all specification checks are performed
+
+        return staticMap.toString()
     }
 
 

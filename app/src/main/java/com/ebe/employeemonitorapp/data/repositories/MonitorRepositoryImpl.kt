@@ -39,23 +39,36 @@ class MonitorRepositoryImpl @Inject constructor(private val service: MonitorServ
     }
 
     override fun getEmployeeDetails(empdetails: EmployeeDetailsRequest): Flow<ResultWrapper<List<EmployeeDetails>>> {
-
+        var errorMsg = ""
         return flow {
             emit(ResultWrapper.Loading())
 
             val result = service.getEmployeeDetails(empdetails)
 
+
+
             result.suspendOnSuccess {
                 if (this.data.response?.msg?.isNotEmpty()!!) {
-                    emit(ResultWrapper.Failure(this.data.response?.msg!!, this.data.response?.code))
-                }
-                emit(ResultWrapper.Success(this.data.result.toDomain()))
+                    errorMsg = this.data.response?.msg!!
+                    emit(
+                        ResultWrapper.Failure(
+                            if (errorMsg.isNotEmpty()) errorMsg else "Error Loading Employee Details",
+                            null
+                        )
+                    )
+                } else
+                    emit(ResultWrapper.Success(this.data.result.toDomain()))
             }
             result.suspendOnError {
                 emit(ResultWrapper.Failure(this.message(), this.statusCode.code))
             }
         }.catch {
-            emit(ResultWrapper.Failure("Error Loading Employee Details", null))
+            emit(
+                ResultWrapper.Failure(
+                    if (errorMsg.isNotEmpty()) errorMsg else "Error Loading Employee Details",
+                    null
+                )
+            )
         }
     }
 
