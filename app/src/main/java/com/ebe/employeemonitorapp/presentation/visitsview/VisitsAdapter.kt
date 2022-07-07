@@ -1,4 +1,4 @@
-package com.ebe.employeemonitorapp.presentation.employeedetails
+package com.ebe.employeemonitorapp.presentation.visitsview
 
 import android.content.Context
 import android.location.Geocoder
@@ -13,19 +13,17 @@ import com.ebe.employeemonitorapp.utils.getAddress
 import com.ebe.employeemonitorapp.utils.getTime
 import com.ivoberger.statikgmapsapi.core.StatikGMapsUrl
 import com.ivoberger.statikgmapsapi.core.StatikMapsLocation
-import kotlinx.coroutines.CoroutineScope
 
-class EmployeeDetailsAdapter(var detailsList: List<EmployeeDetails>) :
-    RecyclerView.Adapter<EmployeeDetailsAdapter.DetailsViewHolder>() {
+class VisitsAdapter(var detailsList: List<EmployeeDetails>) :
+    RecyclerView.Adapter<VisitsAdapter.VisitsViewHolder>() {
 
 
-    var scope: CoroutineScope? = null
+    var context: Context? = null
     private var binding: DetailItemBinding? = null
     var geocoder: Geocoder? = null
-    var context: Context? = null
 
 
-    inner class DetailsViewHolder(val binding: DetailItemBinding) :
+    inner class VisitsViewHolder(val binding: DetailItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(details: EmployeeDetails) {
             binding.name.text = "Name: ${details.name}"
@@ -75,40 +73,22 @@ class EmployeeDetailsAdapter(var detailsList: List<EmployeeDetails>) :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VisitsViewHolder {
         binding = DetailItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return DetailsViewHolder(binding!!)
+        return VisitsViewHolder(binding!!)
     }
 
-    override fun onBindViewHolder(holder: DetailsViewHolder, position: Int) {
-        val details = detailsList[position]
+    override fun onBindViewHolder(holder: VisitsViewHolder, position: Int) {
 
-        holder.bind(details)
+        val item = detailsList[position]
+
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int {
-        return detailsList.size
+        TODO("Not yet implemented")
     }
-
-
-    fun submitList(detailsList: List<EmployeeDetails>) {
-        this.detailsList = detailsList
-        notifyDataSetChanged()
-    }
-
-
-
-
-
-
-
-    var getMapLocation: GetMapLocation? = null
-
-    interface GetMapLocation {
-        fun getMap(lat: Double, long: Double, address: String)
-    }
-
 
     private fun getMapImgURL(lat: Double, long: Double, address: String): String {
         val staticMap = StatikGMapsUrl("AIzaSyA2MSn1f0oSHcG1LonhFkOg0eYImEl8xgE") {
@@ -127,7 +107,9 @@ class EmployeeDetailsAdapter(var detailsList: List<EmployeeDetails>) :
         return staticMap.toString()
     }
 
+    var getMapLocation: VisitsGetMapLocation? = null
 
+    interface VisitsGetMapLocation {
+        fun getMap(lat: Double, long: Double, address: String)
+    }
 }
-
-

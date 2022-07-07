@@ -2,9 +2,11 @@ package com.ebe.employeemonitorapp.data.remote
 
 import com.ebe.employeemonitorapp.data.remote.requests.EmployeeDetailsRequest
 import com.ebe.employeemonitorapp.data.remote.requests.PermissionRequest
+import com.ebe.employeemonitorapp.data.remote.requests.VisitsByDayRequest
 import com.ebe.employeemonitorapp.data.remote.responses.BaseResponse
 import com.ebe.employeemonitorapp.data.remote.responses.EmployeeDetailsResponse
 import com.ebe.employeemonitorapp.data.remote.responses.EmployeesResponse
+import com.ebe.employeemonitorapp.data.remote.responses.VisitsByDayResponse
 import com.skydoves.sandwich.ApiResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,4 +23,8 @@ interface MonitorService {
 
     @POST("ResetUpdateflag")
     suspend fun updatePermission(@Body emp_id: PermissionRequest): ApiResponse<BaseResponse>
+
+
+    @POST("filter")
+    suspend fun visitsByDay(@Body visitsRequest: VisitsByDayRequest): ApiResponse<VisitsByDayResponse>
 }

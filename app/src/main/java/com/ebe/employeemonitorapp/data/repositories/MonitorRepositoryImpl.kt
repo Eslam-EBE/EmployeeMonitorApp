@@ -4,6 +4,7 @@ import com.ebe.employeemonitorapp.data.remote.MonitorService
 import com.ebe.employeemonitorapp.data.remote.ResultWrapper
 import com.ebe.employeemonitorapp.data.remote.requests.EmployeeDetailsRequest
 import com.ebe.employeemonitorapp.data.remote.requests.PermissionRequest
+import com.ebe.employeemonitorapp.data.remote.requests.VisitsByDayRequest
 import com.ebe.employeemonitorapp.data.remote.responses.toDomain
 import com.ebe.employeemonitorapp.domain.models.Employee
 import com.ebe.employeemonitorapp.domain.models.EmployeeDetails
@@ -90,6 +91,41 @@ class MonitorRepositoryImpl @Inject constructor(private val service: MonitorServ
 
         } catch (e: Exception) {
             return 0
+        }
+    }
+
+    override fun getVisitsByDate(request: VisitsByDayRequest): Flow<ResultWrapper<List<EmployeeDetails>>> {
+
+        var errorMsg = ""
+        return flow {
+            emit(ResultWrapper.Loading())
+
+            val result = service.visitsByDay(request)
+
+
+
+            result.suspendOnSuccess {
+                if (this.data.response?.msg?.isNotEmpty()!!) {
+                    errorMsg = this.data.response?.msg!!
+                    emit(
+                        ResultWrapper.Failure(
+                            if (errorMsg.isNotEmpty()) errorMsg else "Error Loading Employees Details",
+                            null
+                        )
+                    )
+                } else
+                    emit(ResultWrapper.Success(this.data.result.toDomain()))
+            }
+            result.suspendOnError {
+                emit(ResultWrapper.Failure(this.message(), this.statusCode.code))
+            }
+        }.catch {
+            emit(
+                ResultWrapper.Failure(
+                    if (errorMsg.isNotEmpty()) errorMsg else "Error Loading Employees Details",
+                    null
+                )
+            )
         }
     }
 }

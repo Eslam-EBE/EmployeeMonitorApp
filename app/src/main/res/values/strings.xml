@@ -7,4 +7,5 @@
     <string name="search">Search</string>
     <string name="give_phone_permission">Give Phone Permission</string>
     <string name="select_monitor_dates">Select Monitor Dates</string>
+    <string name="visits">Visits</string>
 </resources>

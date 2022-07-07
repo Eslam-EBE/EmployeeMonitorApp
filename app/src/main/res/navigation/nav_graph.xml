@@ -15,17 +15,15 @@
             app:destination="@id/employeeDetailsFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_employeesListFragment_to_visitsFragment"
+            app:destination="@id/visitsFragment" />
     </fragment>
     <fragment
         android:id="@+id/employeeDetailsFragment"
         android:name="com.ebe.employeemonitorapp.presentation.employeedetails.EmployeeDetailsFragment"
         android:label="fragment_employee_details"
         tools:layout="@layout/fragment_employee_details">
-        <action
-            android:id="@+id/action_employeeDetailsFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
         <argument
             android:name="phone"
             app:argType="string"
@@ -40,8 +38,17 @@
             app:nullable="true" />
     </fragment>
     <fragment
-        android:id="@+id/mapsFragment"
-        android:name="com.ebe.employeemonitorapp.presentation.mapview.MapsFragment"
-        android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" />
+        android:id="@+id/visitsFragment"
+        android:name="com.ebe.employeemonitorapp.presentation.visitsview.VisitsFragment"
+        android:label="fragment_visits"
+        tools:layout="@layout/fragment_visits">
+        <argument
+            android:name="from"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="to"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

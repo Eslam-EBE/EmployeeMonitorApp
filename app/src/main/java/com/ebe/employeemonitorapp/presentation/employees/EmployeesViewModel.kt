@@ -19,6 +19,7 @@ import javax.inject.Inject
 class EmployeesViewModel @Inject constructor(
     private val getEmployeesUseCase: GetEmployeesUseCase,
     private val permFlagUseCase: UpdatePermFlagUseCase
+
 ) :
     ViewModel() {
 
@@ -39,10 +40,6 @@ class EmployeesViewModel @Inject constructor(
     val errorEventFlow = errorEventChannel.receiveAsFlow()
 
     val permState: SingleLiveEvent<String> = SingleLiveEvent()
-
-
-    private val permEventChannel = Channel<String>(Channel.BUFFERED)
-    val permEventFlow = errorEventChannel.receiveAsFlow()
 
 
     fun getAllEmployees() {
@@ -82,11 +79,11 @@ class EmployeesViewModel @Inject constructor(
             if (permissionState == 1) {
 
                 permState.value = ("Permission Granted for ${employee.name}")
-                // permEventChannel.send("Permission Granted for ${employee.name}")
+
             } else {
                 permState.value = ("Permission Request Failed")
 
-                // permEventChannel.send("Permission Request Failed")
+
             }
         }
 

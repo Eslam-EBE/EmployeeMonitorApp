@@ -1,11 +1,14 @@
 package com.ebe.employeemonitorapp.utils
 
 import android.annotation.SuppressLint
+import android.location.Geocoder
+import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.security.KeyStore
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
@@ -66,4 +69,33 @@ fun getUnsafeOkHttpClient(): OkHttpClient? {
     } catch (e: java.lang.Exception) {
         throw RuntimeException(e)
     }
+}
+
+fun getTime(time: String): String {
+    val sdf = SimpleDateFormat("hh:mm:ss")
+    val sdfs = SimpleDateFormat("hh:mm a")
+    val dt = sdf.parse(time);
+
+    return sdfs.format(dt!!)
+}
+
+
+fun getAddress(lat: Double, long: Double, geocoder: Geocoder): String {
+
+    try {
+        val addresses = geocoder?.getFromLocation(lat, long, 10)?.filter {
+            it.thoroughfare != null
+        }
+
+        return addresses?.get(0)?.getAddressLine(0)!!
+
+
+    } catch (e: Exception) {
+
+        Log.d("adressList", "onLocationSelected: $e.localizedMessage")
+        e.localizedMessage!!
+        return ""
+    }
+
+
 }

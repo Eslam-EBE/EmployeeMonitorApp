@@ -10,46 +10,33 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.employees.EmployeesListFragment">
+        tools:context=".presentation.visitsview.VisitsFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-
-        <Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/purple_700"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/list_title"
+            android:id="@+id/visits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:text="@string/registered_employees"
+            android:text="@string/visits"
             android:textColor="@color/purple_700"
             android:textSize="24sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/employees_rv"
+            android:id="@+id/visits_recycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
             android:padding="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_title"
-            tools:listitem="@layout/employee_item" />
+            app:layout_constraintTop_toBottomOf="@id/visits"
+            tools:listitem="@layout/detail_item" />
 
         <ProgressBar
-            android:id="@+id/employees_progress"
+            android:id="@+id/visits_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,17 +44,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/circular_shape"
-            android:backgroundTint="@color/yellow"
-            android:src="@drawable/ic_baseline_filter_list_24"
-            app:backgroundTintMode="src_in"
+
+        <ImageView
+            android:id="@+id/no_data"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/no_data"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

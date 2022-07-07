@@ -193,7 +193,7 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
             materialAlertDialog.dismiss()
         }
         dialog.selectDates.setOnClickListener {
-            showDateRangePicker(employee)
+            showDateRangePicker(employee) {}
             materialAlertDialog.dismiss()
 
         }
@@ -205,7 +205,7 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
     }
 
 
-    fun showDateRangePicker(employee: Employee) {
+    fun showDateRangePicker(employee: Employee, navigate: () -> Unit) {
         val dateRangePicker =
             MaterialDatePicker.Builder.dateRangePicker()
                 .setSelection(
@@ -227,20 +227,23 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
             val secondDate = sdf.format(netDate2)
             selectedDates = Pair(firstDate, secondDate)
 
-
-
-            findNavController().navigate(
-                EmployeesListFragmentDirections.actionEmployeesListFragmentToEmployeeDetailsFragment(
-                    employee.phone,
-                    firstDate,
-                    secondDate
-                )
-            )
+            navigateToEmployeeDetails(employee.phone, firstDate, secondDate)
             Log.e("selectedDates", "showDateRangePicker: $firstDate  $secondDate ")
         }
 
         dateRangePicker.show(requireActivity().supportFragmentManager, "tag")
 
+    }
+
+
+    private fun navigateToEmployeeDetails(phone: String, firstDate: String, secondDate: String) {
+        findNavController().navigate(
+            EmployeesListFragmentDirections.actionEmployeesListFragmentToEmployeeDetailsFragment(
+                phone,
+                firstDate,
+                secondDate
+            )
+        )
     }
 
 
