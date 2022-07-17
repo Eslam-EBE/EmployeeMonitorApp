@@ -64,11 +64,12 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
         binding.employeesRv.adapter = employeesAdapter
         employeesAdapter!!.employeeClick = this
         viewModel.getAllEmployees()
+        addFabListener()
 
     }
 
 
-    fun addingSearchView() {
+    private fun addingSearchView() {
         binding.toolbar.inflateMenu(R.menu.search_menu)
 
         val searchItem: MenuItem = binding.toolbar.menu.findItem(R.id.search)
@@ -139,6 +140,12 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
 
     }
 
+    fun addFabListener() {
+        binding.fab.setOnClickListener {
+            showDateRangePickerForEmployees()
+        }
+    }
+
 
     fun addObservers() {
         viewModel.loadingState.observe(viewLifecycleOwner)
@@ -193,7 +200,7 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
             materialAlertDialog.dismiss()
         }
         dialog.selectDates.setOnClickListener {
-            showDateRangePicker(employee) {}
+            showDateRangePickerForEmployee(employee)
             materialAlertDialog.dismiss()
 
         }
@@ -205,34 +212,39 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
     }
 
 
-    fun showDateRangePicker(employee: Employee, navigate: () -> Unit) {
-        val dateRangePicker =
-            MaterialDatePicker.Builder.dateRangePicker()
-                .setSelection(
-                    Pair(
-                        MaterialDatePicker.thisMonthInUtcMilliseconds(),
-                        MaterialDatePicker.todayInUtcMilliseconds()
-                    )
-                )
-                .setTitleText("Select dates")
-                .build()
+    private fun showDateRangePickerForEmployee(employee: Employee) {
 
+
+        val dateRangePicker = buildDatePicker()
         dateRangePicker.addOnPositiveButtonClickListener {
 
+            selectedDates = getSelectedDates(it)
 
-            val sdf = SimpleDateFormat("yyyy-MM-dd")
-            val netDate1 = Date(it.first)
-            val netDate2 = Date(it.second)
-            val firstDate = sdf.format(netDate1)
-            val secondDate = sdf.format(netDate2)
-            selectedDates = Pair(firstDate, secondDate)
-
-            navigateToEmployeeDetails(employee.phone, firstDate, secondDate)
-            Log.e("selectedDates", "showDateRangePicker: $firstDate  $secondDate ")
+            navigateToEmployeeDetails(employee.phone, selectedDates!!.first, selectedDates!!.second)
+            Log.e(
+                "selectedDates",
+                "showDateRangePicker: ${selectedDates?.first}  ${selectedDates?.second} "
+            )
         }
 
         dateRangePicker.show(requireActivity().supportFragmentManager, "tag")
 
+    }
+
+    private fun showDateRangePickerForEmployees() {
+        val dateRangePicker = buildDatePicker()
+        dateRangePicker.addOnPositiveButtonClickListener {
+
+            selectedDates = getSelectedDates(it)
+
+            navigateToEmployeesVisits(selectedDates!!.first, selectedDates!!.second)
+            Log.e(
+                "selectedDates",
+                "showDateRangePicker: ${selectedDates?.first}  ${selectedDates?.second} "
+            )
+        }
+
+        dateRangePicker.show(requireActivity().supportFragmentManager, "tag")
     }
 
 
@@ -244,6 +256,40 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
                 secondDate
             )
         )
+    }
+
+
+    private fun navigateToEmployeesVisits(firstDate: String, secondDate: String) {
+        findNavController().navigate(
+            EmployeesListFragmentDirections.actionEmployeesListFragmentToVisitsFragment(
+                firstDate,
+                secondDate
+            )
+        )
+    }
+
+
+    private fun buildDatePicker(): MaterialDatePicker<Pair<Long, Long>> {
+
+        return MaterialDatePicker.Builder.dateRangePicker()
+            .setSelection(
+                Pair(
+                    MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                    MaterialDatePicker.todayInUtcMilliseconds()
+                )
+            )
+            .setTitleText("Select dates")
+            .build()
+    }
+
+
+    private fun getSelectedDates(dates: Pair<Long, Long>): Pair<String, String>? {
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        val netDate1 = Date(dates.first)
+        val netDate2 = Date(dates.second)
+        val firstDate = sdf.format(netDate1)
+        val secondDate = sdf.format(netDate2)
+        return Pair(firstDate, secondDate)
     }
 
 

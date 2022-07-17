@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -33,6 +34,39 @@ class VisitsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getVisitsByDate(args.from!!, args.to!!)
+        addObservers()
+
+
+    }
+
+
+    fun addObservers() {
+        viewModel.employeesDetails.observe(viewLifecycleOwner) {
+
+            if (it.isNullOrEmpty()) {
+                binding.noData.visibility = View.VISIBLE
+            } else {
+                val adapter = VisitsAdapter(it)
+                binding.visitsRecycler.adapter = adapter
+                binding.noData.visibility = View.INVISIBLE
+            }
+        }
+
+
+        viewModel.errorEvent.observe(viewLifecycleOwner)
+        {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG)
+        }
+
+
+        viewModel.loadingState.observe(viewLifecycleOwner)
+        {
+            if (it) {
+                binding.visitsProgress.visibility = View.VISIBLE
+            } else {
+                binding.visitsProgress.visibility = View.VISIBLE
+            }
+        }
     }
 
 

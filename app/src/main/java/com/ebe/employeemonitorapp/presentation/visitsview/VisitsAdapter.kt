@@ -87,7 +87,7 @@ class VisitsAdapter(var detailsList: List<EmployeeDetails>) :
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+       return detailsList.size
     }
 
     private fun getMapImgURL(lat: Double, long: Double, address: String): String {
