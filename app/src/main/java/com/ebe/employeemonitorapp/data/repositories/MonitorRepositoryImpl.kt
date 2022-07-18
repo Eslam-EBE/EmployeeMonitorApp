@@ -74,7 +74,7 @@ class MonitorRepositoryImpl @Inject constructor(private val service: MonitorServ
     }
 
     override suspend fun updateEmployeePermission(id: String): Int {
-        var success = 1
+        var success = 0
         try {
             val result = service.updatePermission(PermissionRequest(id))
 

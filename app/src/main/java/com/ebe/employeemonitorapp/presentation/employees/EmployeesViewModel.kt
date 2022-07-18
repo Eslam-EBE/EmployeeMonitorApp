@@ -30,7 +30,7 @@ class EmployeesViewModel @Inject constructor(
         get() = _employees
 
 
-    private var _loadingState: MutableLiveData<Boolean> = MutableLiveData(true)
+    private var _loadingState: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val loadingState: LiveData<Boolean>
         get() = _loadingState

@@ -24,6 +24,7 @@ import com.ebe.employeemonitorapp.R
 import com.ebe.employeemonitorapp.databinding.DialogLayoutBinding
 import com.ebe.employeemonitorapp.databinding.FragmentEmployeesListBinding
 import com.ebe.employeemonitorapp.domain.models.Employee
+import com.ebe.employeemonitorapp.utils.isNetworkConnected
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +64,18 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
         employeesAdapter = EmployeesAdapter()
         binding.employeesRv.adapter = employeesAdapter
         employeesAdapter!!.employeeClick = this
-        viewModel.getAllEmployees()
+        if (isNetworkConnected(requireContext())) {
+            viewModel.getAllEmployees()
+        } else {
+            if (employees.isEmpty())
+                Toast.makeText(
+                    requireContext(),
+                    "Please Connect To the Internet",
+                    Toast.LENGTH_LONG
+                ).show()
+            binding.employeesProgress.visibility = View.INVISIBLE
+        }
+
         addFabListener()
 
     }
@@ -85,22 +97,7 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
         searchEditText.hint = "Search By Name"
 
 
-//        searchEditText.backgroundTintList = ColorStateList.valueOf(R.color.white)
-//        searchEditText.backgroundTintBlendMode = BlendMode.SRC_OUT
 
-
-//        searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//               filterList(newText)
-//
-//                return false
-//            }
-//
-//        })
 
         var job: Job? = null
         searchEditText.addTextChangedListener {

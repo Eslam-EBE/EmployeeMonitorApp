@@ -25,7 +25,7 @@ class VisitsViewModel @Inject constructor(private val getVisitsByDate: GetVisits
         get() = _employeesDetails
 
 
-    private var _loadingState: MutableLiveData<Boolean> = MutableLiveData(true)
+    private var _loadingState: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val loadingState: LiveData<Boolean>
         get() = _loadingState
@@ -49,8 +49,9 @@ class VisitsViewModel @Inject constructor(private val getVisitsByDate: GetVisits
                     }
 
                     is ResultWrapper.Failure -> {
-                        errorEvent.value = it.message
                         _loadingState.value = false
+                        errorEvent.value = it.message
+
                     }
                 }
             }

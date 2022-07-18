@@ -1,5 +1,8 @@
 package com.ebe.employeemonitorapp.presentation.visitsview
 
+import android.content.Intent
+import android.location.Geocoder
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.ebe.employeemonitorapp.databinding.FragmentVisitsBinding
+import com.ebe.employeemonitorapp.utils.isNetworkConnected
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class VisitsFragment : Fragment() {
+@AndroidEntryPoint
+class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
 
 
     private lateinit var binding: FragmentVisitsBinding
@@ -33,7 +39,14 @@ class VisitsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getVisitsByDate(args.from!!, args.to!!)
+        if (isNetworkConnected(requireContext())) {
+            viewModel.getVisitsByDate(args.from!!, args.to!!)
+        } else {
+            Toast.makeText(requireContext(), "Please Connect To the Internet", Toast.LENGTH_LONG)
+                .show()
+            binding.visitsProgress.visibility = View.INVISIBLE
+        }
+
         addObservers()
 
 
@@ -47,6 +60,10 @@ class VisitsFragment : Fragment() {
                 binding.noData.visibility = View.VISIBLE
             } else {
                 val adapter = VisitsAdapter(it)
+                adapter.context = requireContext()
+                val geocoder = Geocoder(requireContext())
+                adapter.geocoder = geocoder
+                adapter.getMapLocation = this
                 binding.visitsRecycler.adapter = adapter
                 binding.noData.visibility = View.INVISIBLE
             }
@@ -64,8 +81,17 @@ class VisitsFragment : Fragment() {
             if (it) {
                 binding.visitsProgress.visibility = View.VISIBLE
             } else {
-                binding.visitsProgress.visibility = View.VISIBLE
+                binding.visitsProgress.visibility = View.INVISIBLE
             }
+        }
+    }
+
+    override fun getMap(lat: Double, long: Double, address: String) {
+        val gmmIntentUri = Uri.parse("geo:$lat,$long?q=" + Uri.encode(address))
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        mapIntent.resolveActivity(requireActivity().packageManager)?.let {
+            startActivity(mapIntent)
         }
     }
 

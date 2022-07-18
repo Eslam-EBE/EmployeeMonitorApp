@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="registered_employees">Registered Employees</string>
-    <string name="selected_attendance_time_date">Selected Attendances</string>
-    <string name="search">Search</string>
-    <string name="give_phone_permission">Give Phone Permission</string>
-    <string name="select_monitor_dates">Select Monitor Dates</string>
-    <string name="visits">Visits</string>
+    <string name="registered_employees">الموظفين المسجلين</string>
+    <string name="selected_attendance_time_date">مواقيت الزيارات</string>
+    <string name="search">بحث</string>
+    <string name="give_phone_permission">اعطاء اذن</string>
+    <string name="select_monitor_dates">اختر التاريخ</string>
+    <string name="visits">الزيارات</string>
 </resources>
