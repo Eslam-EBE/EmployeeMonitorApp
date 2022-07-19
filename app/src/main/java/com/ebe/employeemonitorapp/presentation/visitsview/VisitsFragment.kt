@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.ebe.employeemonitorapp.R
 import com.ebe.employeemonitorapp.databinding.FragmentVisitsBinding
 import com.ebe.employeemonitorapp.utils.isNetworkConnected
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +43,11 @@ class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
         if (isNetworkConnected(requireContext())) {
             viewModel.getVisitsByDate(args.from!!, args.to!!)
         } else {
-            Toast.makeText(requireContext(), "Please Connect To the Internet", Toast.LENGTH_LONG)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.connect_internet),
+                Toast.LENGTH_LONG
+            )
                 .show()
             binding.visitsProgress.visibility = View.INVISIBLE
         }

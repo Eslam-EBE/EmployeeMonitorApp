@@ -11,7 +11,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.ebe.employeemonitorapp.R
 import com.ebe.employeemonitorapp.databinding.FragmentEmployeeDetailsBinding
+import com.ebe.employeemonitorapp.utils.isNetworkConnected
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -39,7 +41,18 @@ class EmployeeDetailsFragment : Fragment(), EmployeeDetailsAdapter.GetMapLocatio
         super.onViewCreated(view, savedInstanceState)
 
         if (args.phone != null && args.firstDate != null && args.secondDate != null) {
-            viewModel.getEmployeeDetails(args.phone!!, args.firstDate!!, args.secondDate!!)
+            if (isNetworkConnected(requireContext())) {
+                viewModel.getEmployeeDetails(args.phone!!, args.firstDate!!, args.secondDate!!)
+            } else {
+                binding.detailsProgress.visibility = View.INVISIBLE
+                binding.noVisits.visibility = View.VISIBLE
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.connect_internet),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
         }
 
         adapter = EmployeeDetailsAdapter(listOf())

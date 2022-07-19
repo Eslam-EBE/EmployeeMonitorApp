@@ -7,4 +7,5 @@
     <string name="give_phone_permission">اعطاء اذن</string>
     <string name="select_monitor_dates">اختر التاريخ</string>
     <string name="visits">الزيارات</string>
+    <string name="connect_internet">برجاء توصيل الانترنت</string>
 </resources>

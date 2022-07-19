@@ -70,7 +70,7 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
             if (employees.isEmpty())
                 Toast.makeText(
                     requireContext(),
-                    "Please Connect To the Internet",
+                    getString(R.string.connect_internet),
                     Toast.LENGTH_LONG
                 ).show()
             binding.employeesProgress.visibility = View.INVISIBLE

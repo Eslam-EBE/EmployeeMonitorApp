@@ -9,13 +9,12 @@ import com.ebe.employeemonitorapp.data.remote.responses.EmployeesResponse
 import com.ebe.employeemonitorapp.data.remote.responses.VisitsByDayResponse
 import com.skydoves.sandwich.ApiResponse
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface MonitorService {
 
 
-    @GET("getAll")
+    @POST("getAll")
     suspend fun getAllEmployees(): ApiResponse<EmployeesResponse>
 
     @POST("getAttendancebyphone")

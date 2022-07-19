@@ -6,4 +6,5 @@
     <string name="give_phone_permission">Give Permission</string>
     <string name="select_monitor_dates">Select Dates</string>
     <string name="visits">Visits</string>
+    <string name="connect_internet">Please Connect To the Internet</string>
 </resources>

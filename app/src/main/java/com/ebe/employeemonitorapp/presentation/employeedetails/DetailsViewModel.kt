@@ -45,7 +45,7 @@ class DetailsViewModel @Inject constructor(private val useCase: GetEmployeeDetai
 
                 when (it) {
                     is ResultWrapper.Success -> {
-                        _employeeDetails.value = it.value
+                        _employeeDetails.value = it.value ?: listOf()
                         _loadingState.value = false
                     }
 
