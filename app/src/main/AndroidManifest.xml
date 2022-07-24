@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
         android:name=".di.MonitorApp"
@@ -18,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EmployeeMonitorApp"
         android:usesCleartextTraffic="true"
+
         tools:targetApi="31">
 
         <meta-data
@@ -31,6 +34,7 @@
         <activity
             android:name=".presentation.MainActivity"
             android:theme="@style/Theme.App.Starting"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

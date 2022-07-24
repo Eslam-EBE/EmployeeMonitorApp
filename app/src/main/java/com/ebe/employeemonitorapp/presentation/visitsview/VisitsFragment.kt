@@ -25,6 +25,7 @@ class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
 
     private val viewModel: VisitsViewModel by viewModels()
 
+    
     private val args: VisitsFragmentArgs by navArgs()
 
     override fun onCreateView(

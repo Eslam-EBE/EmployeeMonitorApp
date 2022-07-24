@@ -2,6 +2,7 @@ package com.ebe.employeemonitorapp.presentation.employees
 
 
 import android.graphics.PorterDuff
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -24,12 +26,13 @@ import com.ebe.employeemonitorapp.R
 import com.ebe.employeemonitorapp.databinding.DialogLayoutBinding
 import com.ebe.employeemonitorapp.databinding.FragmentEmployeesListBinding
 import com.ebe.employeemonitorapp.domain.models.Employee
-import com.ebe.employeemonitorapp.utils.isNetworkConnected
+import com.ebe.employeemonitorapp.utils.NetworkObserver
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,6 +50,7 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
     private var employees: MutableList<Employee> = mutableListOf()
     private lateinit var materialAlertDialog: AlertDialog
     private var selectedDates: Pair<String, String>? = null
+    private lateinit var networkObserver: NetworkObserver
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,22 +63,25 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val connectivityManager =
+            requireActivity().getSystemService(ConnectivityManager::class.java) as ConnectivityManager
         addingSearchView()
+        networkObserver = NetworkObserver(connectivityManager)
         addObservers()
         employeesAdapter = EmployeesAdapter()
         binding.employeesRv.adapter = employeesAdapter
         employeesAdapter!!.employeeClick = this
-        if (isNetworkConnected(requireContext())) {
-            viewModel.getAllEmployees()
-        } else {
-            if (employees.isEmpty())
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.connect_internet),
-                    Toast.LENGTH_LONG
-                ).show()
-            binding.employeesProgress.visibility = View.INVISIBLE
-        }
+//        if (isNetworkConnected(requireContext())) {
+//            viewModel.getAllEmployees()
+//        } else {
+//            if (employees.isEmpty())
+//                Toast.makeText(
+//                    requireContext(),
+//                    getString(R.string.connect_internet),
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            binding.employeesProgress.visibility = View.INVISIBLE
+//        }
 
         addFabListener()
 
@@ -183,6 +190,24 @@ class EmployeesListFragment : Fragment(), EmployeesAdapter.OnEmployeeClick {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
 
+
+        }
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            networkObserver.networkState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest {
+
+                    if (it && employees.isEmpty()) {
+                        viewModel.getAllEmployees()
+                    } else if (!it && employees.isEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            requireActivity().getString(R.string.connect_internet),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
 
         }
 
