@@ -85,6 +85,9 @@ class EmployeeDetailsFragment : Fragment(), EmployeeDetailsAdapter.GetMapLocatio
                 binding.detailsProgress.visibility = View.VISIBLE
             } else {
                 binding.detailsProgress.visibility = View.INVISIBLE
+                if (adapter.detailsList.isEmpty()) {
+                    binding.noVisits.visibility = View.VISIBLE
+                }
             }
         }
 

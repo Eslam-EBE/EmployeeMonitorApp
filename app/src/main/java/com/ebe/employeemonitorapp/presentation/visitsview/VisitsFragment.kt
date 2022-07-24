@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.ebe.employeemonitorapp.R
 import com.ebe.employeemonitorapp.databinding.FragmentVisitsBinding
+import com.ebe.employeemonitorapp.domain.models.EmployeeDetails
 import com.ebe.employeemonitorapp.utils.isNetworkConnected
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +26,7 @@ class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
 
     private val viewModel: VisitsViewModel by viewModels()
 
-    
+    private var employeeDetails: List<EmployeeDetails>? = null
     private val args: VisitsFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -51,6 +52,7 @@ class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
             )
                 .show()
             binding.visitsProgress.visibility = View.INVISIBLE
+            binding.noData.visibility = View.VISIBLE
         }
 
         addObservers()
@@ -62,9 +64,9 @@ class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
     fun addObservers() {
         viewModel.employeesDetails.observe(viewLifecycleOwner) {
 
-            if (it.isNullOrEmpty()) {
-                binding.noData.visibility = View.VISIBLE
-            } else {
+            if (!it.isNullOrEmpty()) {
+
+                employeeDetails = it
                 val adapter = VisitsAdapter(it)
                 adapter.context = requireContext()
                 val geocoder = Geocoder(requireContext())
@@ -72,6 +74,7 @@ class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
                 adapter.getMapLocation = this
                 binding.visitsRecycler.adapter = adapter
                 binding.noData.visibility = View.INVISIBLE
+
             }
         }
 
@@ -88,6 +91,9 @@ class VisitsFragment : Fragment(), VisitsAdapter.VisitsGetMapLocation {
                 binding.visitsProgress.visibility = View.VISIBLE
             } else {
                 binding.visitsProgress.visibility = View.INVISIBLE
+                if (employeeDetails.isNullOrEmpty()) {
+                    binding.noData.visibility = View.VISIBLE
+                }
             }
         }
     }
